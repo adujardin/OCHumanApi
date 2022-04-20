@@ -116,7 +116,7 @@ class OCHuman():
     def toCocoFormart(self, subset='all', maxIouRange=(0., 1.), save_dir=None):
         # maxIouRange: Moderate [0.5, 0.75), Hard [0.75, 1.]
         assert self._filter in ['kpt&segm', 'segm&kpt']
-        assert subset in ['all', 'val', 'test']
+        assert subset in ['all', 'val', 'test', 'train', 'val_500']
         
         # total 4731 Image; 8110 Persons.
         # val set: first 2500 Images
@@ -157,7 +157,12 @@ class OCHuman():
             imgIds = self.imgIds[0: 2500]
         elif subset == 'test':
             imgIds = self.imgIds[2500:]
-            
+        # Custom
+        elif subset == 'train':
+            imgIds = self.imgIds[500:]
+        elif subset == 'val_500':
+            imgIds = self.imgIds[0: 500]
+
         IMGID = 1 # v4 modified
         ANNOID = 1 # v4 modified
         for image_id in imgIds:
@@ -247,3 +252,12 @@ class OCHuman():
         else:
             return dataset_json
         
+
+if __name__ == "__main__":
+    # Convert Annotations into a custom split with COCO format
+    ochuman = OCHuman(AnnoFile='./ochuman.json', Filter='kpt&segm')
+    image_ids = ochuman.getImgIds()
+    print ('Total images: %d'%len(image_ids))
+
+    ochuman.toCocoFormart(subset='train', maxIouRange=(0.0, 1.0), save_dir='./')
+    ochuman.toCocoFormart(subset='val_500', maxIouRange=(0.0, 1.0), save_dir='./')

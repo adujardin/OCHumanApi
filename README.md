@@ -44,5 +44,11 @@ cd OCHumanApi
 make install
 ```
 
+## Train/Val 500 split at COCO format
+
+[relevant code](./ochumanApi/ochuman.py#L256)
+
+Simply run `python ./ochumanApi/ochuman.py` with the main annotation in the current folder (ochuman.json)
+
 ## How to use
 See [Demo.ipynb](Demo.ipynb)
